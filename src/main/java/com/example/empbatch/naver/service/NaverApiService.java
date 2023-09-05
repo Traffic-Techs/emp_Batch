@@ -1,6 +1,8 @@
 package com.example.empbatch.naver.service;
 
+import com.example.empbatch.entity.Products;
 import com.example.empbatch.naver.dto.ItemDto;
+import com.example.empbatch.repository.ProductRepository;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,10 +10,11 @@ import java.net.URI;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,13 +24,11 @@ import java.time.LocalDateTime;
 
 @Slf4j(topic = "NAVER API")
 @Service
+@RequiredArgsConstructor
 public class NaverApiService {
 
   private final RestTemplate restTemplate;
-
-  public NaverApiService(RestTemplateBuilder builder) {
-    this.restTemplate = builder.build();
-  }
+  private final ProductRepository productRepository;
 
   public List<ItemDto> searchItems(String query) {
     int itemsPerPage = 100;  // 한 페이지에 표시할 아이템 수
@@ -105,4 +106,33 @@ public class NaverApiService {
     return itemDtoList;
   }
 
+  public void updateProducts(String query) {
+
+    List<ItemDto> itemDtoList = searchItems(query);
+
+    for (ItemDto itemDto : itemDtoList) {
+
+      // 중복 데이터 검사
+      String productTitle = itemDto.getTitle();
+      boolean isExistingProduct = productRepository.existsByTitle(productTitle);
+
+      if (!isExistingProduct) {
+        Products products = new Products();
+        products.setTitle(itemDto.getTitle());
+        products.setCategory(itemDto.getCategory());
+        products.setImages(itemDto.getImage());
+        products.setCost(itemDto.getPrice());
+        products.setAmount(generateRandomAmount());
+        products.setRegister_date(LocalDateTime.now());
+        products.setSale(true);
+
+        productRepository.save(products);
+      }
+    }
+  }
+
+  private Long generateRandomAmount () {
+    Random random = new Random();
+    return (long) (random.nextInt(10000) + 1);
+  }
 }
