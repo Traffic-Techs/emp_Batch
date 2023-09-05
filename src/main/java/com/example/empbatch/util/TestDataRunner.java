@@ -28,32 +28,7 @@ public class TestDataRunner implements ApplicationRunner {
   }
 
   private void createTestData(String searchWord) {
-
-    List<ItemDto> itemDtoList = naverApiService.searchItems(searchWord);
-
-    List<Products> productList = new ArrayList<>();
-
-    for (ItemDto itemDto : itemDtoList) {
-      Products products = new Products();
-
-      // 인기 검색어 관련 상품 업데이트
-      products.setTitle(itemDto.getTitle());
-      products.setCategory(itemDto.getCategory());
-      products.setImages(itemDto.getImage());
-      products.setCost(itemDto.getPrice());
-      products.setAmount(generateRandomAmount());
-      products.setRegister_date(LocalDateTime.now());
-      products.setSale(true);
-
-      productList.add(products);
-    }
-
-    productRepository.saveAll(productList);
-  }
-
-  private Long generateRandomAmount() {
-    Random random = new Random();
-    return (long) (random.nextInt(10000) + 1);
+    naverApiService.updateProducts(searchWord);
   }
 
 }
