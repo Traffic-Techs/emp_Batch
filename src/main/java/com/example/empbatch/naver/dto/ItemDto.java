@@ -9,13 +9,15 @@ import org.json.JSONObject;
 public class ItemDto {
 
   private String title;
-  private String category;
+//  private String category;
   private String image;
+  private String description;
   private Long price;
 
   public ItemDto(JSONObject itemJson) {
     this.title = itemJson.getString("title");
-    this.category = itemJson.getString("category2");
+    this.description = itemJson.getString("link");
+//    this.category = itemJson.getString("category2");
     this.image = itemJson.getString("image");
     this.price = itemJson.getLong("lprice");
   }

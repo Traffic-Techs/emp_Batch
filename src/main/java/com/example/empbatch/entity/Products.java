@@ -29,7 +29,10 @@ public class Products {
   private String images;
 
   @Column(nullable = false)
-  private String category;
+  private String description;
+
+//  @Column(nullable = false)
+//  private String category;
 
   @Column(nullable = false)
   private Long cost;
@@ -45,11 +48,11 @@ public class Products {
   private Boolean sale;
 
   @Builder
-  public Products(String title, String images, String category, Long cost, Long amount,
+  public Products(String title, String images, String description, Long cost, Long amount,
       LocalDateTime register_date, Boolean sale) {
     this.title = title;
     this.images = images;
-    this.category = category;
+    this.description = description;
     this.cost = cost;
     this.amount = amount;
     this.register_date = register_date;

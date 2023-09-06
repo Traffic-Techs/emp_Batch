@@ -119,7 +119,8 @@ public class NaverApiService {
       if (!isExistingProduct) {
         Products products = new Products();
         products.setTitle(itemDto.getTitle());
-        products.setCategory(itemDto.getCategory());
+        products.setDescription(itemDto.getDescription());
+//        products.setCategory(itemDto.getCategory());
         products.setImages(itemDto.getImage());
         products.setCost(itemDto.getPrice());
         products.setAmount(generateRandomAmount());
