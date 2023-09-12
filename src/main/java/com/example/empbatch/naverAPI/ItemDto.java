@@ -1,4 +1,4 @@
-package com.example.empbatch.naver.dto;
+package com.example.empbatch.naverAPI;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

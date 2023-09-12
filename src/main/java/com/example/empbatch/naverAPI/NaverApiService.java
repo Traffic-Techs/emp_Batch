@@ -1,12 +1,12 @@
-package com.example.empbatch.naver.service;
+package com.example.empbatch.naverAPI;
 
 import com.example.empbatch.entity.Products;
-import com.example.empbatch.naver.dto.ItemDto;
-import com.example.empbatch.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +20,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import java.time.LocalDateTime;
 
 @Slf4j(topic = "NAVER API")
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class NaverApiService {
 
   private final RestTemplate restTemplate;
@@ -106,31 +106,25 @@ public class NaverApiService {
     return itemDtoList;
   }
 
+  @Transactional
   public void updateProducts(String query) {
 
     List<ItemDto> itemDtoList = searchItems(query);
 
     for (ItemDto itemDto : itemDtoList) {
+      Products products = new Products();
+      products.setTitle(itemDto.getTitle());
+      products.setDescription(itemDto.getDescription());
+      //        products.setCategory(itemDto.getCategory());
+      products.setImages(itemDto.getImage());
+      products.setCost(itemDto.getPrice());
+      products.setAmount(generateRandomAmount());
+      products.setSale(true);
 
-      // 중복 데이터 검사
-      String productTitle = itemDto.getTitle();
-      boolean isExistingProduct = productRepository.existsByTitle(productTitle);
-
-      if (!isExistingProduct) {
-        Products products = new Products();
-        products.setTitle(itemDto.getTitle());
-        products.setDescription(itemDto.getDescription());
-//        products.setCategory(itemDto.getCategory());
-        products.setImages(itemDto.getImage());
-        products.setCost(itemDto.getPrice());
-        products.setAmount(generateRandomAmount());
-        products.setRegister_date(LocalDateTime.now());
-        products.setSale(true);
-
-        productRepository.save(products);
-      }
+      productRepository.save(products);
     }
   }
+
 
   private Long generateRandomAmount () {
     Random random = new Random();
