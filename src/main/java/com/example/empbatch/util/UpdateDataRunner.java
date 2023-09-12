@@ -1,38 +1,36 @@
 package com.example.empbatch.util;
 
-import com.example.empbatch.naver.service.NaverApiService;
-import com.example.empbatch.repository.ProductRepository;
-import com.example.empbatch.searchWordCrawling.SearchWord;
+import com.example.empbatch.naverAPI.NaverApiService;
+import com.example.empbatch.naverAPI.ProductRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class UpdateDataRunner implements ApplicationRunner {
 
+  private final SearchWord searchWord;
   @Autowired
   ProductRepository productRepository;
-
   @Autowired
   NaverApiService naverApiService;
 
-  private final SearchWord searchWord;
-
+  // 2시간마다 정보 업데이트
+  @Scheduled(cron = "1 30 */2 * * *")
   @Override
   public void run(ApplicationArguments args) {
     List<String> searchList = searchWord.searchList;
     for (String searchItem : searchList) {
-      createTestData(searchItem);
+      updateNewData(searchItem);
     }
   }
 
-  private void createTestData(String searchWord) {
+  private void updateNewData(String searchWord) {
     naverApiService.updateProducts(searchWord);
   }
-
 }
