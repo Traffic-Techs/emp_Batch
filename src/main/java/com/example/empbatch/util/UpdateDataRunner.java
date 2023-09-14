@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,6 +20,7 @@ public class UpdateDataRunner implements ApplicationRunner {
   @Autowired
   NaverApiService naverApiService;
 
+  @Scheduled(cron = "0 0 7 * * ?")
   @Override
   public void run(ApplicationArguments args) {
     List<String> wordList = new ArrayList<>();
@@ -46,7 +48,7 @@ public class UpdateDataRunner implements ApplicationRunner {
       wordList.add("그래픽 카드");
       wordList.add("주변기기");
       wordList.add("블랙프라이데이 할인");
-      wordList.add("사이버먼데이 세일");
+      wordList.add("어댑터");
       wordList.add("플레이스테이션");
       wordList.add("엑스박스");
       wordList.add("닌텐도 스위치");
@@ -57,7 +59,7 @@ public class UpdateDataRunner implements ApplicationRunner {
       wordList.add("사무용 가전제품");
       wordList.add("무선 라우터");
       wordList.add("스마트 조명");
-      wordList.add("스마트 플러그");
+      wordList.add("이북리더기");
       wordList.add("미니 프로젝터");
       wordList.add("스마트 서큘레이터 팬");
       wordList.add("블루레이 플레이어");
