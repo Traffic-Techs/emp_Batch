@@ -110,6 +110,7 @@ public class NaverApiService {
   public void updateProducts(String query) {
 
     List<ItemDto> itemDtoList = searchItems(query);
+    List<Products> productsList = new ArrayList<>();
 
     for (ItemDto itemDto : itemDtoList) {
       Products products = new Products();
@@ -121,8 +122,9 @@ public class NaverApiService {
       products.setAmount(generateRandomAmount());
       products.setSale(true);
 
-      productRepository.save(products);
+      productsList.add(products);
     }
+    productRepository.saveAll(productsList);
   }
 
 
